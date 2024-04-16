@@ -2,7 +2,6 @@
   height: 100vh;
   display: grid;
   place-content: center;
-
   background-color: black;
 }
 
@@ -12,8 +11,9 @@
 }
 
 .top-left-button {
-  position: absolute; /* Remove the button from normal document flow */
-  top: 0; /* Place it at the top edge */
-  left: 0; /* Place it at the left edge */
-  /* Add other button styles here, like background color, padding, etc. */
+  align-items: center;
+  top: 0;
+  left: 0;
+  color: black;
+  font-size: 20px;
 }

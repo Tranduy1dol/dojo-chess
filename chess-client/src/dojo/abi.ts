@@ -87,13 +87,39 @@ export const abi = [
         ]
     },
     {
+        "type": "struct",
+        "name": "chess::models::piece::MoveResult",
+        "members": [
+            {
+                "name": "game_id",
+                "type": "core::integer::u32"
+            },
+            {
+                "name": "curr_position",
+                "type": "chess::models::piece::Vec2"
+            },
+            {
+                "name": "next_position",
+                "type": "chess::models::piece::Vec2"
+            },
+            {
+                "name": "result",
+                "type": "core::bool"
+            }
+        ]
+    },
+    {
         "type": "interface",
         "name": "chess::actions::IActions",
         "items": [
             {
                 "type": "function",
-                "name": "move",
+                "name": "get_move_result",
                 "inputs": [
+                    {
+                        "name": "game_id",
+                        "type": "core::integer::u32"
+                    },
                     {
                         "name": "curr_position",
                         "type": "chess::models::piece::Vec2"
@@ -101,55 +127,11 @@ export const abi = [
                     {
                         "name": "next_position",
                         "type": "chess::models::piece::Vec2"
-                    },
-                    {
-                        "name": "caller",
-                        "type": "core::starknet::contract_address::ContractAddress"
-                    },
-                    {
-                        "name": "game_id",
-                        "type": "core::integer::u32"
-                    }
-                ],
-                "outputs": [],
-                "state_mutability": "view"
-            },
-            {
-                "type": "function",
-                "name": "is_in_check",
-                "inputs": [
-                    {
-                        "name": "caller",
-                        "type": "core::starknet::contract_address::ContractAddress"
-                    },
-                    {
-                        "name": "game_id",
-                        "type": "core::integer::u32"
                     }
                 ],
                 "outputs": [
                     {
-                        "type": "core::bool"
-                    }
-                ],
-                "state_mutability": "view"
-            },
-            {
-                "type": "function",
-                "name": "is_in_checkmate",
-                "inputs": [
-                    {
-                        "name": "caller",
-                        "type": "core::starknet::contract_address::ContractAddress"
-                    },
-                    {
-                        "name": "game_id",
-                        "type": "core::integer::u32"
-                    }
-                ],
-                "outputs": [
-                    {
-                        "type": "core::bool"
+                        "type": "chess::models::piece::MoveResult"
                     }
                 ],
                 "state_mutability": "view"
@@ -159,6 +141,10 @@ export const abi = [
                 "name": "is_legal_move",
                 "inputs": [
                     {
+                        "name": "game_id",
+                        "type": "core::integer::u32"
+                    },
+                    {
                         "name": "curr_position",
                         "type": "chess::models::piece::Vec2"
                     },
@@ -167,20 +153,12 @@ export const abi = [
                         "type": "chess::models::piece::Vec2"
                     },
                     {
-                        "name": "game_id",
-                        "type": "core::integer::u32"
-                    },
-                    {
                         "name": "caller",
                         "type": "core::starknet::contract_address::ContractAddress"
                     }
                 ],
-                "outputs": [
-                    {
-                        "type": "core::bool"
-                    }
-                ],
-                "state_mutability": "view"
+                "outputs": [],
+                "state_mutability": "external"
             },
             {
                 "type": "function",
@@ -200,7 +178,7 @@ export const abi = [
                         "type": "core::integer::u32"
                     }
                 ],
-                "state_mutability": "view"
+                "state_mutability": "external"
             }
         ]
     },
@@ -263,4 +241,4 @@ export const abi = [
             }
         ]
     }
-];
+]

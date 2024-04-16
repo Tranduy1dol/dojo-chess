@@ -4,7 +4,7 @@ mod tests {
     use dojo::test_utils::{spawn_test_world, deploy_contract};
     use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
     use chess::models::player::{Player, Color, player};
-    use chess::models::piece::{Piece, PieceType, Vec2, piece};
+    use chess::models::piece::{Piece, PieceType, Vec2, MoveResult, piece, move_result};
     use chess::models::game::{Game, GameTurn, game, game_turn};
     use chess::actions::{actions, IActionsDispatcher, IActionsDispatcherTrait};
 
@@ -15,7 +15,8 @@ mod tests {
             game::TEST_CLASS_HASH,
             player::TEST_CLASS_HASH,
             game_turn::TEST_CLASS_HASH,
-            piece::TEST_CLASS_HASH
+            piece::TEST_CLASS_HASH,
+            move_result::TEST_CLASS_HASH
         ];
         // deploy world with models
         let world = spawn_test_world(models);
@@ -78,7 +79,8 @@ mod tests {
         let next_pos = Vec2 { x: 0, y: 2 };
         let game_turn = get!(world, game_id, (GameTurn));
         assert(game_turn.player_color == Color::White, 'should be white player turn');
-        actions_system.is_legal_move(curr_pos, next_pos, game_id, white.into());
+        actions_system.is_legal_move(game_id, curr_pos, next_pos, white.into());
+        let result = actions_system.get_move_result(game_id, curr_pos, next_pos);
 
         let curr_pos = next_pos;
         let c3 = get!(world, (game_id, curr_pos), (Piece));

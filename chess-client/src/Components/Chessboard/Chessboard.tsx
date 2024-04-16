@@ -1,7 +1,7 @@
 import './Chessboard.css'
 import Tile from "../Tile/Tile";
-import React, {useRef, useState} from "react";
-import {setupNetwork, white, black} from "../../dojo/setupNetwork";
+import React, {useEffect, useRef, useState} from "react";
+import {callMove, setupNetwork} from "../../dojo/setupNetwork";
 
 interface Piece {
     image: string
@@ -36,14 +36,20 @@ for (let p = 0; p < 2; p++) {
     initialBoardState.push({image: `/Assets/Images/${type}-queen.png`, x: 3, y});
 }
 
-export default function Chessboard(props: { gameId: any; }) {
-    const { gameId } = props;
-    const [player, setPlayer] = useState(white);
+export default function Chessboard({gameId, playerAddresses}: {
+    gameId: any;
+    playerAddresses: { white: String, black: String }
+}) {
+    const [player, setPlayer] = useState(playerAddresses.white);
     const [activePiece, setActivePiece] = useState<HTMLElement | null>(null);
     const [gridX, setGridX] = useState(0);
     const [gridY, setGridY] = useState(0);
     const [pieces, setPieces] = useState<Piece[]>(initialBoardState);
     const chessBoardRef = useRef<HTMLDivElement>(null);
+
+    // useEffect(() => {
+    //     setPlayer(playerAddresses.white);
+    // }, [gameId]);
 
     const grabPiece = (e: React.MouseEvent) => {
         const chessboard = chessBoardRef.current;
@@ -95,12 +101,13 @@ export default function Chessboard(props: { gameId: any; }) {
         if (activePiece && chessboard) {
             const x = Math.floor((e.clientX - chessboard.offsetLeft) / 100);
             const y = 7 - Math.floor((e.clientY - chessboard.offsetTop) / 100);
-            const current_position: Vec2 = { x: gridX, y: gridY };
-            const next_position: Vec2 = { x: x, y: y };
+            const current_position: Vec2 = {x: gridX, y: gridY};
+            const next_position: Vec2 = {x: x, y: y};
             console.log(current_position, next_position);
 
             // Call the network function and handle the response
-            const moveSuccessful = await setupNetwork().callMove(current_position, next_position, gameId, player, setupNetwork().signer);
+            let network = setupNetwork();
+            const moveSuccessful = await callMove(current_position, next_position, gameId, player, network);
             console.log("move:" + moveSuccessful);
             if (moveSuccessful !== false) {
                 const pieceToRemove = pieces.find((p) => p.x === x && p.y === y);
@@ -116,10 +123,10 @@ export default function Chessboard(props: { gameId: any; }) {
                         return p;
                     });
                 });
-                if (player === white) {
-                    setPlayer(black);
+                if (player === playerAddresses.white) {
+                    setPlayer(playerAddresses.black);
                 } else {
-                    setPlayer(white);
+                    setPlayer(playerAddresses.white);
                 }
             } else {
                 // Move failed, return piece to original position
@@ -149,17 +156,17 @@ export default function Chessboard(props: { gameId: any; }) {
                 }
             });
 
-            board.push(<Tile key={`${j},${i}`} image={image} number={number} />);
+            board.push(<Tile key={`${j},${i}`} image={image} number={number}/>);
         }
     }
 
     return (
         <div
-        onMouseUp={(e) => dropPiece(e)}
-        onMouseDown={(e) => grabPiece(e)}
-        onMouseMove={(e) => movePiece(e)}
-        id="chessboard"
-        ref={chessBoardRef}>
+            onMouseUp={(e) => dropPiece(e)}
+            onMouseDown={(e) => grabPiece(e)}
+            onMouseMove={(e) => movePiece(e)}
+            id="chessboard"
+            ref={chessBoardRef}>
             {board}
         </div>
     )

@@ -1,6 +1,6 @@
 use starknet::ContractAddress;
 
-#[derive(Model, Drop, Serde)]
+#[derive(Model, Drop, Serde, Debug)]
 struct Player {
     #[key]
     game_id: u32,
@@ -9,7 +9,7 @@ struct Player {
     color: Color
 }
 
-#[derive(Serde, Drop, Copy, PartialEq, Introspect)]
+#[derive(Serde, Drop, Copy, PartialEq, Introspect, Debug)]
 enum Color {
     White,
     Black,

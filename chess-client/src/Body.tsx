@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import Button from "./Components/Button/Button";
-import { setupNetwork } from "./dojo/setupNetwork";
+import {setupNetwork, SpawnGame} from "./dojo/setupNetwork";
 import Chessboard from "./Components/Chessboard/Chessboard";
 
 export enum State {
@@ -13,9 +13,12 @@ export enum State {
 export function Body() {
     const [state, setState] = useState<State>(State.Init);
     const [gameId, setGameId] = useState(1);
+    const [playerAddresses, setPlayerAddresses] = useState({white: "", black: ""});
 
     useEffect(() => {
-        if (state === State.Spawn) setupNetwork().callSpawn(setupNetwork().signer, setupNetwork().signer).then(() => {
+        const network = setupNetwork();
+        if (state === State.Spawn) SpawnGame(network).then(addresses => {
+            setPlayerAddresses(addresses);
             setState(State.Playing);
         })
     }, [state]);
@@ -36,9 +39,9 @@ export function Body() {
                 </div>}
             {state === State.Playing && <div>
                 <Button onClick={() => handleReset()}>
-                    <div className="top-left-button"> Reset </div>
+                    <div className="top-left-button"> Reset</div>
                 </Button>
-                <Chessboard gameId={gameId}/>
+                <Chessboard gameId={gameId} playerAddresses={playerAddresses}/>
             </div>}
             {state === State.End && <p>
                 Checkmate! Game Over.

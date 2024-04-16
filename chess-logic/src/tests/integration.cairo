@@ -33,7 +33,7 @@ mod tests {
 
         //Move White Pawn to (0,3)
         let wp_next_pos = Vec2 { x: 0, y: 3 };
-        actions_system.move(wp_curr_pos, wp_next_pos, white.into(), game_id);
+        actions_system.is_legal_move(game_id, wp_curr_pos, wp_next_pos, white.into());
 
         //White pawn is now in (0,3)
         let wp_curr_pos = wp_next_pos;
@@ -44,7 +44,7 @@ mod tests {
 
         //Move black Pawn to (1,4)
         let bp_next_pos = Vec2 { x: 1, y: 4 };
-        actions_system.move(bp_curr_pos, bp_next_pos, black.into(), game_id);
+        actions_system.is_legal_move(game_id, bp_curr_pos, bp_next_pos, black.into());
 
         //Black pawn is now in (1,4)
         let bp_curr_pos = bp_next_pos;
@@ -54,7 +54,7 @@ mod tests {
         assert(b5.piece_type != PieceType::None, 'should have piece in (1,4)');
 
         // Move White Pawn to (1,4) and capture black pawn
-        actions_system.move(wp_curr_pos, bp_curr_pos, white.into(), game_id);
+        actions_system.is_legal_move(game_id, wp_curr_pos, bp_curr_pos, white.into());
 
         let wp_curr_pos = bp_curr_pos;
         let b5 = get!(world, (game_id, wp_curr_pos), (Piece));

@@ -19,13 +19,24 @@ struct Vec2 {
 
 #[derive(Serde, Drop, Copy, PartialEq, Introspect)]
 enum PieceType {
+    None,
     Pawn,
     Knight,
     Bishop,
     Rook,
     Queen,
     King,
-    None,
+}
+
+#[derive(Serde, Drop, Copy, Model, Debug)]
+struct MoveResult {
+    #[key]
+    game_id: u32,
+    #[key]
+    curr_position: Vec2,
+    #[key]
+    next_position: Vec2,
+    result: bool,
 }
 
 #[derive(Serde, Drop, Copy, Debug, Display)]
